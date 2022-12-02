@@ -941,6 +941,35 @@ if __name__ == "__main__":
             quality=8,
         )
 
+    elif args.render_val:
+        testsavedir = os.path.join(cfg.basedir, cfg.expname, f"render_val_{ckpt_name}")
+        os.makedirs(testsavedir, exist_ok=True)
+        print("All results are dumped into", testsavedir)
+        rgbs, depths, bgmaps = render_viewpoints(
+            render_poses=data_dict["poses"][data_dict["i_val"]],
+            HW=data_dict["HW"][data_dict["i_val"]],
+            Ks=data_dict["Ks"][data_dict["i_val"]],
+            gt_imgs=[data_dict["images"][i].cpu().numpy() for i in data_dict["i_val"]],
+            savedir=testsavedir,
+            dump_images=args.dump_images,
+            eval_ssim=args.eval_ssim,
+            eval_lpips_alex=args.eval_lpips_alex,
+            eval_lpips_vgg=args.eval_lpips_vgg,
+            **render_viewpoints_kwargs,
+        )
+        imageio.mimwrite(
+            os.path.join(testsavedir, "video.rgb.mp4"),
+            utils.to8b(rgbs),
+            fps=30,
+            quality=8,
+        )
+        imageio.mimwrite(
+            os.path.join(testsavedir, "video.depth.mp4"),
+            utils.to8b(1 - depths / np.max(depths)),
+            fps=30,
+            quality=8,
+        )
+
     # render testset and eval
     if args.render_test:
         testsavedir = os.path.join(cfg.basedir, cfg.expname, f"render_test_{ckpt_name}")
