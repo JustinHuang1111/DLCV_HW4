@@ -195,10 +195,11 @@ def render_viewpoints(
             depths[i] = np.rot90(depths[i], k=render_video_rot90, axes=(0, 1))
             bgmaps[i] = np.rot90(bgmaps[i], k=render_video_rot90, axes=(0, 1))
 
+    os.makedirs(os.path.join(savedir, "images"), exist_ok=True)
     if savedir is not None and dump_images:
         for i in trange(len(rgbs)):
             rgb8 = utils.to8b(rgbs[i])
-            filename = os.path.join(savedir, "{:03d}.png".format(i))
+            filename = os.path.join(savedir, "images", "{:03d}.png".format(i))
             imageio.imwrite(filename, rgb8)
 
     rgbs = np.array(rgbs)
