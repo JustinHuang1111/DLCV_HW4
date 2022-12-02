@@ -44,7 +44,7 @@ def pose_spherical(theta, phi, radius):
 
 
 def load_blender_data(basedir, half_res=False, testskip=1):
-    splits = ["train", "val", "test"]
+    splits = ["train", "val"]
     metas = {}
     for s in splits:
         with open(os.path.join(basedir, "transforms_{}.json".format(s)), "r") as fp:
@@ -72,7 +72,7 @@ def load_blender_data(basedir, half_res=False, testskip=1):
         all_imgs.append(imgs)
         all_poses.append(poses)
 
-    i_split = [np.arange(counts[i], counts[i + 1]) for i in range(3)]
+    i_split = [np.arange(counts[i], counts[i + 1]) for i in range(2)]
 
     imgs = np.concatenate(all_imgs, 0)
     poses = np.concatenate(all_poses, 0)
