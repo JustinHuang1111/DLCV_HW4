@@ -57,6 +57,7 @@ def config_parser():
         help="do not optimize, reload weights and render out render_poses path",
     )
     parser.add_argument("--render_test", action="store_true")
+    parser.add_argument("--render_val", action="store_true")
     parser.add_argument("--render_train", action="store_true")
     parser.add_argument("--render_video", action="store_true")
     parser.add_argument("--render_video_flipy", action="store_true")
