@@ -879,7 +879,7 @@ if __name__ == "__main__":
         train(args, cfg, data_dict)
 
     # load model for rendring
-    if args.render_test or args.render_train or args.render_video:
+    if args.render_test or args.render_train or args.render_video or args.render_val:
         if args.ft_path:
             ckpt_path = args.ft_path
         else:
