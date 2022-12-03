@@ -201,7 +201,9 @@ def render_viewpoints(
             rgb8 = utils.to8b(rgbs[i])
             filename = os.path.join(savedir, "images", "{:03d}.png".format(i))
             # print(rgb8)
-            rgb8 = np.concatenate(rgb8, np.ones((800, 800, 1)).astype(np.uint8))
+            rgb8 = np.concatenate(
+                (rgb8, np.ones((800, 800, 1)).astype(np.uint8)), axis=2
+            )
             for i in range(len(rgb8)):
                 for j in range(len(rgb8[i])):
                     if (rgb8[i][j] == [255, 255, 255]).all():
