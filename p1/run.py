@@ -201,13 +201,13 @@ def render_viewpoints(
             rgb8 = utils.to8b(rgbs[i])
             filename = os.path.join(savedir, "images", f"r_{i}.png")
             # print(rgb8)
-            rgb8 = np.concatenate(
-                (rgb8, np.ones((800, 800, 1)).astype(np.uint8) * 255), axis=2
-            )
-            for i in range(len(rgb8)):
-                for j in range(len(rgb8[i])):
-                    if (rgb8[i][j] == [255, 255, 255, 255]).all():
-                        rgb8[i][j] = [255, 255, 255, 0]
+            # rgb8 = np.concatenate(
+            #     (rgb8, np.ones((800, 800, 1)).astype(np.uint8) * 255), axis=2
+            # )
+            # for i in range(len(rgb8)):
+            #     for j in range(len(rgb8[i])):
+            #         if (rgb8[i][j] == [255, 255, 255, 255]).all():
+            #             rgb8[i][j] = [255, 255, 255, 0]
             print(rgb8[400][400])
             imageio.v2.imwrite(filename, rgb8)
 
