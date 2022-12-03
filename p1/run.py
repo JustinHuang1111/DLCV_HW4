@@ -198,9 +198,10 @@ def render_viewpoints(
     os.makedirs(os.path.join(savedir, "images"), exist_ok=True)
     if savedir is not None and dump_images:
         for i in trange(len(rgbs)):
-            rgb8 = utils.to8b(rgbs[i])
+            # rgb8 = utils.to8b(rgbs[i])
             filename = os.path.join(savedir, "images", "{:03d}.png".format(i))
-            imageio.imwrite(filename, rgb8)
+            # imageio.imwrite(filename, rgb8)
+            imageio.imwrite(filename, rgbs[i])
 
     rgbs = np.array(rgbs)
     depths = np.array(depths)
