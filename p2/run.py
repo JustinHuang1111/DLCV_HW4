@@ -1,6 +1,7 @@
 import torch
 from byol_pytorch import BYOL
 from torchvision import models
+from tqdm.auto import tqdm
 
 resnet = models.resnet50(pretrained=False)
 
@@ -18,7 +19,7 @@ def sample_unlabelled_images():
     return torch.randn(20, 3, 256, 256)
 
 
-for _ in range(100):
+for _ in tqdm(range(100)):
     images = sample_unlabelled_images()
     loss = learner(images)
     opt.zero_grad()
