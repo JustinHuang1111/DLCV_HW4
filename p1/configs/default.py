@@ -37,8 +37,7 @@ data = dict(
 """ Template of training options
 """
 coarse_train = dict(
-    # N_iters=5000,                 # number of optimization steps
-    N_iters=10000,  # number of optimization steps
+    N_iters=10000,  # number of optimization steps # 5000
     N_rand=8192,  # batch size (number of random rays per optimization step)
     lrate_density=1e-1,  # lr of density voxel grid
     lrate_k0=1e-1,  # lr of color/feature voxel grid
@@ -67,8 +66,7 @@ coarse_train = dict(
 fine_train = deepcopy(coarse_train)
 fine_train.update(
     dict(
-        # N_iters=20000,
-        N_iters=40000,
+        N_iters=40000,  # 20000
         pervoxel_lr=False,
         ray_sampler="in_maskcache",
         weight_entropy_last=0.001,
