@@ -103,7 +103,6 @@ def render_viewpoints(test_image_path, gt_image_path):
         rgb = imageio.v2.imread(img_paths[i], pilmode="RGBA")
         rgb = (np.array(rgb) / 255.0).astype(np.float32)
         rgb = rgb[..., :3] * rgb[..., -1:]
-        print(rgb[400][400])
         gt = imageio.v2.imread(gt_paths[i], pilmode="RGBA")
         gt = (np.array(gt) / 255.0).astype(np.float32)
         gt = gt[..., :3] * gt[..., -1:] + (1.0 - gt[..., -1:])
