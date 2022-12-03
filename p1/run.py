@@ -202,7 +202,7 @@ def render_viewpoints(
             filename = os.path.join(savedir, "images", "{:03d}.png".format(i))
             # print(rgb8)
             rgb8 = np.concatenate(
-                (rgb8, np.ones((800, 800, 1)).astype(np.uint8)), axis=2
+                (rgb8, np.ones((800, 800, 1)).astype(np.uint8) * 255), axis=2
             )
             for i in range(len(rgb8)):
                 for j in range(len(rgb8[i])):
