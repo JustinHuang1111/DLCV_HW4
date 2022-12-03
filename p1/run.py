@@ -199,7 +199,7 @@ def render_viewpoints(
     if savedir is not None and dump_images:
         for i in trange(len(rgbs)):
             rgb8 = utils.to8b(rgbs[i])
-            filename = os.path.join(savedir, "images", "{:03d}.png".format(i))
+            filename = os.path.join(savedir, "images", f"r_{i}.png")
             # print(rgb8)
             rgb8 = np.concatenate(
                 (rgb8, np.ones((800, 800, 1)).astype(np.uint8) * 255), axis=2
