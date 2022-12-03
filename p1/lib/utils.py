@@ -14,7 +14,7 @@ from .masked_adam import MaskedAdam
 """ Misc
 """
 mse2psnr = lambda x: -10.0 * torch.log10(x)
-to8b = lambda x: (255 * np.clip(x, 0, 1)).astype(np.float32)
+to8b = lambda x: (255 * np.clip(x, 0, 1)).astype(np.uint8)
 
 
 def create_optimizer_or_freeze_model(model, cfg_train, global_step):
