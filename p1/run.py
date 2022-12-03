@@ -208,6 +208,7 @@ def render_viewpoints(
                 for j in range(len(rgb8[i])):
                     if (rgb8[i][j] == [255, 255, 255, 255]).all():
                         rgb8[i][j] = [255, 255, 255, 0]
+            print(rgb8[400][400])
             imageio.v2.imwrite(filename, rgb8, pilmode="RGBA")
 
     rgbs = np.array(rgbs)
