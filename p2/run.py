@@ -5,6 +5,7 @@ import kornia
 import numpy as np
 import torch
 import torch.nn as nn
+import torchvision.functional as TF
 from byol_pytorch import BYOL
 from PIL import Image
 from torch.utils.data import DataLoader, Dataset
@@ -41,7 +42,7 @@ class TrainDataset(Dataset):
     def __getitem__(self, idx):
         fname = self.files[idx]
         im = Image.open(fname)
-
+        im = TF.to_tensor(im)
         return im
 
 
