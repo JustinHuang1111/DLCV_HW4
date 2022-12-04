@@ -20,7 +20,7 @@ def config_parser():
     )
     parser.add_argument("--image_path", required=True, help="config file path")
     parser.add_argument(
-        "--n_epochs", default=100, required=True, help="config file path"
+        "--n_epochs", default=100, type=int, required=True, help="config file path"
     )
 
     return parser
