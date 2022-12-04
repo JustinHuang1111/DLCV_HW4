@@ -31,9 +31,7 @@ class TrainDataset(Dataset):
         super(Dataset).__init__()
         self.path = path
 
-        self.files = sorted(
-            [os.path.join(path, x) for x in os.listdir(path) if x.endswith(".png")]
-        )
+        self.files = sorted([os.path.join(path, x) for x in os.listdir(path)])
         self.filenames = sorted([file for file in os.listdir(path)])
         print(f"One {path} sample", self.files[0])
 
