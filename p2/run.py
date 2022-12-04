@@ -59,7 +59,7 @@ parser = config_parser()
 args = parser.parse_args()
 
 resnet = models.resnet50(pretrained=False)
-os.makedirs("./ckpt")
+os.makedirs("./ckpt", exist_ok=True)
 augment_fn = nn.Sequential(kornia.augmentation.RandomHorizontalFlip())
 
 augment_fn2 = nn.Sequential(
