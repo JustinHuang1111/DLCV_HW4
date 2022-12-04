@@ -79,7 +79,7 @@ learner = BYOL(
 optimizer = torch.optim.Adam(learner.parameters(), lr=3e-4)
 
 
-train_set = Dataset(os.path.join(args.image_path))
+train_set = TrainDataset(os.path.join(args.image_path))
 train_loader = DataLoader(
     train_set, batch_size=32, shuffle=True, num_workers=4, pin_memory=True
 )
