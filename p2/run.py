@@ -5,7 +5,7 @@ import kornia
 import numpy as np
 import torch
 import torch.nn as nn
-import torchvision.functional as TF
+import torchvision.transforms.functional as TF
 from byol_pytorch import BYOL
 from PIL import Image
 from torch.utils.data import DataLoader, Dataset
