@@ -97,13 +97,22 @@ class FinetuneDataset:
             f"finish building label list at {datapath} Training:{self.is_train}, the length is {len(self.labels_list)}"
         )
         self.filenames = sort_csv.filename.values[:]
-        self.images_list = sorted(
-            [
-                os.path.join(datapath, "data", x)
-                for x in os.listdir(os.path.join(datapath, "data"))
-                if x in self.filenames
-            ]
-        )
+        if self.is_train:
+            self.images_list = sorted(
+                [
+                    os.path.join(datapath, "train")
+                    for x in os.listdir(os.path.join(datapath, "train"))
+                    if x in self.filenames
+                ]
+            )
+        else:
+            self.images_list = sorted(
+                [
+                    os.path.join(datapath, "val")
+                    for x in os.listdir(os.path.join(datapath, "val"))
+                    if x in self.filenames
+                ]
+            )
         print(
             f"finish building image list at {datapath}, number of images:{len(self.images_list)}"
         )
