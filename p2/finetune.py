@@ -104,7 +104,6 @@ class FinetuneDataset:
             f"finish building label list at {datapath} Training:{self.is_train}, the length is {len(self.labels_list)}"
         )
         self.filenames = sort_csv.filename.values[:]
-        print(self.filenames, self.labels_list)
         if self.is_train:
             self.images_list = [
                 os.path.join(datapath, "train", x)
@@ -134,7 +133,7 @@ class FinetuneDataset:
         label = classes[stripped_label]
 
         # target train -> only image
-        print(self.images_list[idx], stripped_label, label)
+        # print(self.images_list[idx], stripped_label, label)
         return im, label
 
 
