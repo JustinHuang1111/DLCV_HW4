@@ -20,6 +20,7 @@ def config_parser():
     parser = argparse.ArgumentParser(
         formatter_class=argparse.ArgumentDefaultsHelpFormatter
     )
+    parser.add_argument("--pretrain", action="store_true")
     parser.add_argument("--image_path", required=True, help="config file path")
     parser.add_argument("--model_path", required=True, help="config file path")
     parser.add_argument("--exp_name", required=True, help="config file path")
@@ -144,9 +145,11 @@ valid_set = FinetuneDataset(args.image_path, train=False, tfm=test_tfm)
 valid_loader = DataLoader(
     valid_set, batch_size=256, shuffle=False, num_workers=4, pin_memory=True
 )
-
-backbone = models.resnet50(pretrained=False)
-backbone.load_state_dict(torch.load(args.model_path))
+if not args.pretrain:
+    backbone = models.resnet50(pretrained=False)
+    backbone.load_state_dict(torch.load(args.model_path))
+else:
+    backbone = models.resnet50(pretrained=True)
 
 
 class fullModel(nn.Module):
