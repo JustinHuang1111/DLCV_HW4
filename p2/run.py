@@ -3,8 +3,10 @@ import os
 
 import kornia
 import numpy as np
+import pandas as pd
 import torch
 import torch.nn as nn
+import torchvision.transforms as transforms
 import torchvision.transforms.functional as TF
 from byol_pytorch import BYOL
 from PIL import Image
@@ -80,7 +82,7 @@ optimizer = torch.optim.Adam(learner.parameters(), lr=3e-4)
 
 train_set = TrainDataset(os.path.join(args.image_path))
 train_loader = DataLoader(
-    train_set, batch_size=32, shuffle=True, num_workers=4, pin_memory=True
+    train_set, batch_size=256, shuffle=True, num_workers=4, pin_memory=True
 )
 
 
@@ -127,3 +129,6 @@ for epoch in range(args.n_epochs):
     # Make sure the model is in eval mode so that some modules like dropout are disabled and work normally.
 
 torch.save(resnet.state_dict(), "./ckpt/improved-net.pt")
+
+####################### Finish Pretrain
+print("Finished Pretrained")
