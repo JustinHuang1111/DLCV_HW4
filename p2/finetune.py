@@ -181,7 +181,7 @@ criterion = nn.CrossEntropyLoss()
 
 # Initialize optimizer, you may fine-tune some hyperparameters such as learning rate on your own.
 optimizer = torch.optim.Adam(model.parameters(), lr=0.01, weight_decay=1e-5)
-scheduler = torch.optim.lr_schedule.ReduceLROnPlateau(optimizer, "min")
+scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, "min")
 # Initialize trackers, these are not parameters and should not be changed
 stale = 0
 best_acc = 0
