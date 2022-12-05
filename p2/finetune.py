@@ -192,7 +192,7 @@ for epoch in range(args.n_epochs):
         imgs, labels = batch
         # imgs = imgs.half()
         # print(imgs.shape,labels.shape)
-        labels = TF.to_tensor(labels)
+        labels = torch.Tensor(labels)
         # Forward the data. (Make sure data and model are on the same device.)
         logits = model(imgs.to(device))
         # print(np.shape(logits))
