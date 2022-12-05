@@ -6,6 +6,7 @@ import pandas as pd
 import torch
 import torch.nn as nn
 import torchvision.transforms as transforms
+import torchvision.transforms.functional as TF
 from PIL import Image
 from torch.utils.data import DataLoader, Dataset
 from torchvision import models
@@ -191,7 +192,7 @@ for epoch in range(args.n_epochs):
         imgs, labels = batch
         # imgs = imgs.half()
         # print(imgs.shape,labels.shape)
-
+        labels = TF.to_tensor(labels)
         # Forward the data. (Make sure data and model are on the same device.)
         logits = model(imgs.to(device))
         # print(np.shape(logits))
