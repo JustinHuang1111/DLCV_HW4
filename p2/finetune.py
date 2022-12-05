@@ -100,7 +100,7 @@ class FinetuneDataset:
         if self.is_train:
             self.images_list = sorted(
                 [
-                    os.path.join(datapath, "train")
+                    os.path.join(datapath, "train", x)
                     for x in os.listdir(os.path.join(datapath, "train"))
                     if x in self.filenames
                 ]
@@ -108,7 +108,7 @@ class FinetuneDataset:
         else:
             self.images_list = sorted(
                 [
-                    os.path.join(datapath, "val")
+                    os.path.join(datapath, "val", x)
                     for x in os.listdir(os.path.join(datapath, "val"))
                     if x in self.filenames
                 ]
