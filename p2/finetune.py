@@ -145,17 +145,18 @@ valid_set = FinetuneDataset(args.image_path, train=False, tfm=test_tfm)
 valid_loader = DataLoader(
     valid_set, batch_size=256, shuffle=False, num_workers=4, pin_memory=True
 )
-if not args.pretrain:
-    backbone = models.resnet50(pretrained=False)
-    backbone.load_state_dict(torch.load(args.model_path))
-else:
-    backbone = models.resnet50(pretrained=True)
 
 
 class fullModel(nn.Module):
-    def __init__(self, backbone) -> None:
+    def __init__(self) -> None:
         super(fullModel, self).__init__()
-        self.backbone = backbone
+        if not args.pretrain:
+            self.backbone = models.resnet50(pretrained=False)
+            self.backbone.load_state_dict(torch.load(args.model_path))
+            print(f"use model from {args.model_path}")
+        else:
+            self.backbone = models.resnet50(pretrained=True)
+            print("use pretrained model")
         self.fc = nn.Sequential(
             nn.ReLU(), nn.Linear(1000, 250), nn.ReLU(), nn.Linear(250, 65)
         )
@@ -166,7 +167,7 @@ class fullModel(nn.Module):
         return out
 
 
-model = fullModel(backbone).to(device)
+model = fullModel().to(device)
 
 
 # The number of training epochs and patience.
