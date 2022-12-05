@@ -129,7 +129,6 @@ class FinetuneDataset:
 
     def __getitem__(self, idx):
         im = self.transform(Image.open(self.images_list[idx]))
-
         # source train and valid / target valid -> image and label
         label = classes[self.labels_list[idx]]
 
@@ -144,7 +143,7 @@ train_loader = DataLoader(
 )
 valid_set = FinetuneDataset(args.image_path, train=False, tfm=test_tfm)
 valid_loader = DataLoader(
-    valid_set, batch_size=256, shuffle=False, num_workers=4, pin_memory=True
+    valid_set, batch_size=256, shuffle=True, num_workers=4, pin_memory=True
 )
 
 
