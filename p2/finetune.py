@@ -50,7 +50,7 @@ train_tfm = transforms.Compose(
         transforms.RandomApply(
             transforms=[
                 transforms.RandomHorizontalFlip(),
-                # transforms.RandomResizedCrop(size=(128, 128)),
+                transforms.RandomResizedCrop(size=(128, 128)),
             ],
             p=0.8,
         ),
