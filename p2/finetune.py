@@ -130,7 +130,7 @@ class FinetuneDataset:
     def __getitem__(self, idx):
         im = self.transform(Image.open(self.images_list[idx]))
         # source train and valid / target valid -> image and label
-        stripped_label = self.images_list[idx].split(".")[0][:-6]
+        stripped_label = self.images_list[idx].split(".")[0][:-5]
         label = classes[stripped_label]
 
         # target train -> only image
