@@ -281,7 +281,7 @@ for epoch in range(args.n_epochs):
                 f"[ Valid | {epoch + 1:03d}/{args.n_epochs:03d} ] loss = {valid_loss:.5f}, acc = {valid_acc:.5f} -> best"
             )
             f.write(
-                f"[ Valid {args.exp_name} | {epoch + 1:03d}/{args.n_epoch:03d} ] loss = {valid_loss:.5f}, acc = {valid_acc:.5f} -> best\n"
+                f"[ Valid {args.exp_name} | {epoch + 1:03d}/{args.n_epochs:03d} ] loss = {valid_loss:.5f}, acc = {valid_acc:.5f} -> best\n"
             )
     else:
         with open(f"./{args.exp_name}_log.txt", "a") as f:
@@ -289,7 +289,7 @@ for epoch in range(args.n_epochs):
                 f"[ Valid | {epoch + 1:03d}/{args.n_epochs:03d} ] loss = {valid_loss:.5f}, acc = {valid_acc:.5f}"
             )
             f.write(
-                f"[ Valid {args.exp_name} | {epoch + 1:03d}/{args.n_epoch:03d} ] loss = {valid_loss:.5f}, acc = {valid_acc:.5f}\n"
+                f"[ Valid {args.exp_name} | {epoch + 1:03d}/{args.n_epochs:03d} ] loss = {valid_loss:.5f}, acc = {valid_acc:.5f}\n"
             )
 
     # save models
