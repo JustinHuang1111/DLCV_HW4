@@ -104,21 +104,19 @@ class FinetuneDataset:
         )
         self.filenames = sort_csv.filename.values[:]
         if self.is_train:
-            self.images_list = sorted(
-                [
-                    os.path.join(datapath, "train", x)
-                    for x in os.listdir(os.path.join(datapath, "train"))
-                    if x in self.filenames
-                ]
-            )
+            self.images_list = [
+                os.path.join(datapath, "train", x)
+                for x in os.listdir(os.path.join(datapath, "train"))
+                if x in self.filenames
+            ]
+
         else:
-            self.images_list = sorted(
-                [
-                    os.path.join(datapath, "val", x)
-                    for x in os.listdir(os.path.join(datapath, "val"))
-                    if x in self.filenames
-                ]
-            )
+            self.images_list = [
+                os.path.join(datapath, "val", x)
+                for x in os.listdir(os.path.join(datapath, "val"))
+                if x in self.filenames
+            ]
+
         print(
             f"finish building image list at {datapath}, number of images:{len(self.images_list)}"
         )
@@ -155,7 +153,9 @@ class fullModel(nn.Module):
     def __init__(self, backbone) -> None:
         super(fullModel, self).__init__()
         self.backbone = backbone
-        self.fc = nn.Sequential(nn.Linear(1000, 250), nn.ReLU(), nn.Linear(250, 65))
+        self.fc = nn.Sequential(
+            nn.ReLU(), nn.Linear(1000, 250), nn.ReLU(), nn.Linear(250, 65)
+        )
 
     def forward(self, x):
         out = self.backbone(x)
@@ -175,7 +175,7 @@ patience = 30  # If no improvement in 'patience' epochs, early stop
 criterion = nn.CrossEntropyLoss()
 
 # Initialize optimizer, you may fine-tune some hyperparameters such as learning rate on your own.
-optimizer = torch.optim.Adam(model.parameters(), lr=0.0001, weight_decay=1e-5)
+optimizer = torch.optim.Adam(model.parameters(), lr=0.01, weight_decay=1e-5)
 
 # Initialize trackers, these are not parameters and should not be changed
 stale = 0
@@ -195,10 +195,9 @@ for epoch in range(args.n_epochs):
 
         # A batch consists of image data and corresponding labels.
         imgs, labels = batch
-        print
         # imgs = imgs.half()
         # print(imgs.shape,labels.shape)
-        labels = torch.Tensor(labels)
+        # labels = torch.Tensor(labels)
         # Forward the data. (Make sure data and model are on the same device.)
         logits = model(imgs.to(device))
         # print(np.shape(logits))
