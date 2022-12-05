@@ -35,6 +35,7 @@ test_tfm = transforms.Compose(
     [
         transforms.Resize((128, 128)),
         transforms.ToTensor(),
+        transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225]),
     ]
 )
 
@@ -49,9 +50,9 @@ train_tfm = transforms.Compose(
         transforms.RandomApply(
             transforms=[
                 transforms.RandomHorizontalFlip(),
-                transforms.RandomResizedCrop(size=(128, 128)),
+                # transforms.RandomResizedCrop(size=(128, 128)),
             ],
-            p=0.9,
+            p=0.8,
         ),
         transforms.RandomApply(
             transforms=[
@@ -64,6 +65,7 @@ train_tfm = transforms.Compose(
             p=0.4,
         ),
         transforms.ToTensor(),
+        transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225]),
     ]
 )
 
@@ -78,8 +80,6 @@ if torch.cuda.is_available():
 device = "cuda" if torch.cuda.is_available() else "cpu"
 parser = config_parser()
 args = parser.parse_args()
-
-device = "cuda" if torch.cuda.is_available() else "cpu"
 
 
 with open("./class.json", newline="") as jsonfile:
@@ -133,7 +133,7 @@ class FinetuneDataset:
         label = classes[self.labels_list[idx]]
 
         # target train -> only image
-
+        print(im, label)
         return im, label
 
 
@@ -157,6 +157,7 @@ class fullModel(nn.Module):
         else:
             self.backbone = models.resnet50(pretrained=True)
             print("use pretrained model")
+        print(self.backbone)
         self.fc = nn.Sequential(
             nn.ReLU(), nn.Linear(1000, 250), nn.ReLU(), nn.Linear(250, 65)
         )
@@ -180,11 +181,10 @@ criterion = nn.CrossEntropyLoss()
 
 # Initialize optimizer, you may fine-tune some hyperparameters such as learning rate on your own.
 optimizer = torch.optim.Adam(model.parameters(), lr=0.01, weight_decay=1e-5)
-
+scheduler = torch.optim.lr_schedule.ReduceLROnPlateau(optimizer, "min")
 # Initialize trackers, these are not parameters and should not be changed
 stale = 0
 best_acc = 0
-loss = 0
 for epoch in range(args.n_epochs):
 
     # ---------- Training ----------
@@ -199,29 +199,19 @@ for epoch in range(args.n_epochs):
 
         # A batch consists of image data and corresponding labels.
         imgs, labels = batch
-        # imgs = imgs.half()
-        # print(imgs.shape,labels.shape)
-        # labels = torch.Tensor(labels)
         # Forward the data. (Make sure data and model are on the same device.)
         logits = model(imgs.to(device))
-        # print(np.shape(logits))
-
         # Calculate the cross-entropy loss.
         # We don't need to apply softmax before computing cross-entropy as it is done automatically.
         loss = criterion(logits, labels.to(device))
-
         # Gradients stored in the parameters in the previous step should be cleared out first.
         optimizer.zero_grad()
-
         # Compute the gradients for parameters.
         loss.backward()
-
         # Clip the gradient norms for stable training.
         grad_norm = nn.utils.clip_grad_norm_(model.parameters(), max_norm=10)
-
         # Update the parameters with computed gradients.
         optimizer.step()
-
         # Compute the accuracy for current batch.
         acc = (logits.argmax(dim=-1) == labels.to(device)).float().mean()
 
@@ -272,6 +262,12 @@ for epoch in range(args.n_epochs):
     valid_loss = sum(valid_loss) / len(valid_loss)
     valid_acc = sum(valid_accs) / len(valid_accs)
 
+    #######################
+    #      scheduler      #
+    #######################
+    scheduler.step(valid_loss)
+
+    #######################
     # Print the information.
     print(
         f"[ Valid | {epoch + 1:03d}/{args.n_epochs:03d} ] loss = {valid_loss:.5f}, acc = {valid_acc:.5f}"
@@ -314,9 +310,3 @@ for epoch in range(args.n_epochs):
         if stale > patience:
             print(f"No improvment {patience} consecutive epochs, early stopping")
             break
-    # if epoch == 0 or epoch == 99 or epoch == 50:
-    #     torch.save(
-    #         model.state_dict(), f"{args.exp_name}_best_{epoch}.ckpt"
-    #     )  # only save best to prevent output memory exceed error
-
-# 0.71400 -> best
