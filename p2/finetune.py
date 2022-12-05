@@ -133,7 +133,7 @@ class FinetuneDataset:
         label = classes[self.labels_list[idx]]
 
         # target train -> only image
-        print(self.images_list[idx], label)
+        print(self.images_list[idx], self.labels_list[idx], label)
         return im, label
 
 
