@@ -72,7 +72,7 @@ learner = BYOL(
     resnet,
     image_size=128,
     hidden_layer="avgpool",
-    use_momentum=False,  # turn off momentum in the target encoder
+    # use_momentum=False,  # turn off momentum in the target encoder
     augment_fn=augment_fn,
     augment_fn2=augment_fn2,
 ).to(device)
