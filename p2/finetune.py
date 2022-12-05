@@ -1,4 +1,5 @@
 import argparse
+import json
 import os
 
 import numpy as np
@@ -80,6 +81,10 @@ args = parser.parse_args()
 device = "cuda" if torch.cuda.is_available() else "cpu"
 
 
+with open("./class.json", newline="") as jsonfile:
+    classes = json.load(jsonfile)
+
+
 class FinetuneDataset:
     def __init__(self, datapath, train: bool, tfm=test_tfm):
         # self.files =
@@ -126,7 +131,7 @@ class FinetuneDataset:
         im = self.transform(Image.open(self.images_list[idx]))
 
         # source train and valid / target valid -> image and label
-        label = self.labels_list[idx]
+        label = classes[self.labels_list[idx]]
 
         # target train -> only image
 
@@ -190,6 +195,7 @@ for epoch in range(args.n_epochs):
 
         # A batch consists of image data and corresponding labels.
         imgs, labels = batch
+        print
         # imgs = imgs.half()
         # print(imgs.shape,labels.shape)
         labels = torch.Tensor(labels)
