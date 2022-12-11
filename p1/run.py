@@ -984,7 +984,7 @@ if __name__ == "__main__":
     if args.render_test:
         # testsavedir = os.path.join(cfg.basedir, cfg.expname, f"render_test_{ckpt_name}")
         os.makedirs(args.outpath, exist_ok=True)
-        print("All results are dumped into", testsavedir)
+        print("All results are dumped into", args.outpath)
         rgbs, depths, bgmaps = render_viewpoints(
             render_poses=data_dict["poses"][data_dict["i_test"]],
             HW=data_dict["HW"][data_dict["i_test"]],
