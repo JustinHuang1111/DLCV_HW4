@@ -239,6 +239,7 @@ def load_everything(args, cfg):
         "near_clip",
         "i_train",
         "i_val",
+        "i_test",
         "irregular_shape",
         "poses",
         "render_poses",
