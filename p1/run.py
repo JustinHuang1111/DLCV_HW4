@@ -984,6 +984,8 @@ if __name__ == "__main__":
 
     # render testset and eval
     if args.render_test:
+        print(data_dict["HW"])
+        print(data_dict["i_test"])
         # testsavedir = os.path.join(cfg.basedir, cfg.expname, f"render_test_{ckpt_name}")
         os.makedirs(args.outpath, exist_ok=True)
         print("All results are dumped into", args.outpath)
