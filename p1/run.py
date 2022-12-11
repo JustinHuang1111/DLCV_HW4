@@ -985,7 +985,7 @@ if __name__ == "__main__":
     # render testset and eval
     if args.render_test:
         print(data_dict["HW"])
-        print(data_dict["i_test"])
+        print(data_dict["filenames"])
         # testsavedir = os.path.join(cfg.basedir, cfg.expname, f"render_test_{ckpt_name}")
         os.makedirs(args.outpath, exist_ok=True)
         print("All results are dumped into", args.outpath)
@@ -998,7 +998,7 @@ if __name__ == "__main__":
             eval_ssim=args.eval_ssim,
             eval_lpips_alex=args.eval_lpips_alex,
             eval_lpips_vgg=args.eval_lpips_vgg,
-            filenames=data_dict["filenames"][data_dict["i_test"]],
+            filenames=data_dict["filenames"],
             **render_viewpoints_kwargs,
         )
        
