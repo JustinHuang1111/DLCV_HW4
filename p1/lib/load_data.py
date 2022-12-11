@@ -196,6 +196,7 @@ def load_data(args, json_dir = None):
         poses=poses,
         render_poses=render_poses,
         depths=depths,
+        filenames = filenames,
         irregular_shape = False
     )
     else:
