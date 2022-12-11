@@ -128,7 +128,7 @@ def load_blender_test_data(json_dir, half_res=False, testskip=1):
         poses = np.array(poses).astype(np.float32)
         all_poses.append(poses)
 
-    i_split = [np.arange(counts[i], counts[i + 1]) for i in range(1)]
+    i_split = [np.arange(0, len(filenames)) for i in range(len(splits))]
 
     poses = np.concatenate(all_poses, 0)
     H, W = 800, 800
