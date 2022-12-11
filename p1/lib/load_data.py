@@ -60,19 +60,15 @@ def load_data(args, json_dir = None):
         print("NEAR FAR", near, far)
 
     elif args.dataset_type == "blender_test":
-        images, poses, render_poses, hwf, i_split, filenames = load_blender_test_data(
+        poses, render_poses, hwf, i_split, filenames = load_blender_test_data(
             json_dir, args.half_res, args.testskip
         )
-        print("Loaded blender", images.shape, render_poses.shape, hwf, args.datadir, f"{len(filenames)} files")
+        print("Loaded blender",render_poses.shape, hwf, args.datadir, f"{len(filenames)} files")
         i_test = i_split
 
         near, far = 2.0, 6.0
 
-        if images.shape[-1] == 4:
-            if args.white_bkgd:
-                images = images[..., :3] * images[..., -1:] + (1.0 - images[..., -1:])
-            else:
-                images = images[..., :3] * images[..., -1:]
+        
     
     elif args.dataset_type == "blender":
         images, poses, render_poses, hwf, i_split = load_blender_data(
@@ -196,7 +192,6 @@ def load_data(args, json_dir = None):
         i_test=i_test,
         poses=poses,
         render_poses=render_poses,
-        images=images,
         depths=depths,
         irregular_shape=irregular_shape,
     )

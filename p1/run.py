@@ -987,7 +987,6 @@ if __name__ == "__main__":
             render_poses=data_dict["poses"][data_dict["i_test"]],
             HW=data_dict["HW"][data_dict["i_test"]],
             Ks=data_dict["Ks"][data_dict["i_test"]],
-            gt_imgs=[data_dict["images"][i].cpu().numpy() for i in data_dict["i_test"]],
             savedir=args.outpath,
             dump_images=args.dump_images,
             eval_ssim=args.eval_ssim,

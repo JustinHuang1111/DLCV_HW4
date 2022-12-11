@@ -110,7 +110,6 @@ def load_blender_test_data(json_dir, half_res=False, testskip=1):
         with open(json_dir, "r") as fp:
             metas[s] = json.load(fp)
 
-    all_imgs = []
     all_poses = []
     filenames = []
     counts = [0]
@@ -126,18 +125,13 @@ def load_blender_test_data(json_dir, half_res=False, testskip=1):
         for frame in meta["frames"][::skip]:
             filenames.append(frame["file_path"].split("/")[-1])
             poses.append(np.array(frame["transform_matrix"]))
-        imgs = (np.array(imgs) / 255.0).astype(np.float32)  # keep all 4 channels (RGBA)
         poses = np.array(poses).astype(np.float32)
-        counts.append(counts[-1] + imgs.shape[0])
-        all_imgs.append(imgs)
         all_poses.append(poses)
 
     i_split = [np.arange(counts[i], counts[i + 1]) for i in range(1)]
 
-    imgs = np.concatenate(all_imgs, 0)
     poses = np.concatenate(all_poses, 0)
-
-    H, W = imgs[0].shape[:2]
+    H, W = 800, 800
     camera_angle_x = float(meta["camera_angle_x"])
     focal = 0.5 * W / np.tan(0.5 * camera_angle_x)
 
@@ -154,10 +148,6 @@ def load_blender_test_data(json_dir, half_res=False, testskip=1):
         W = W // 2
         focal = focal / 2.0
 
-        imgs_half_res = np.zeros((imgs.shape[0], H, W, 4))
-        for i, img in enumerate(imgs):
-            imgs_half_res[i] = cv2.resize(img, (W, H), interpolation=cv2.INTER_AREA)
-        imgs = imgs_half_res
         # imgs = tf.image.resize_area(imgs, [400, 400]).numpy()
 
-    return imgs, poses, render_poses, [H, W, focal], i_split, filenames
+    return poses, render_poses, [H, W, focal], i_split, filenames
