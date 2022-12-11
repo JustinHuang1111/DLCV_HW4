@@ -28,6 +28,7 @@ def config_parser():
     )
     parser.add_argument("--config", required=True, help="config file path")
     parser.add_argument("--json_dir", help="json file path")
+    parser.add_argument("--outpath", help="json file path")
     parser.add_argument("--seed", type=int, default=777, help="Random seed")
     parser.add_argument(
         "--no_reload", action="store_true", help="do not reload weights from saved ckpt"
