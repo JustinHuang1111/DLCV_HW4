@@ -103,6 +103,7 @@ def render_viewpoints(
     eval_ssim=False,
     eval_lpips_alex=False,
     eval_lpips_vgg=False,
+    filenames = None
 ):
     """Render images for the given viewpoints; run evaluation if gt given."""
     assert len(render_poses) == len(HW) and len(HW) == len(Ks)
@@ -199,7 +200,10 @@ def render_viewpoints(
     if savedir is not None and dump_images:
         for i in trange(len(rgbs)):
             rgb8 = utils.to8b(rgbs[i])
-            filename = os.path.join(savedir, "images", f"r_{i}.png")
+            if filenames != None:
+                filename = os.path.join(savedir, filenames[i])
+            else:
+                filename = os.path.join(savedir, "images", f"r_{i}.png")
 
             imageio.v2.imwrite(filename, rgb8)
 
@@ -975,33 +979,22 @@ if __name__ == "__main__":
 
     # render testset and eval
     if args.render_test:
-        testsavedir = os.path.join(cfg.basedir, cfg.expname, f"render_test_{ckpt_name}")
-        os.makedirs(testsavedir, exist_ok=True)
+        # testsavedir = os.path.join(cfg.basedir, cfg.expname, f"render_test_{ckpt_name}")
+        os.makedirs(args.outpath, exist_ok=True)
         print("All results are dumped into", testsavedir)
         rgbs, depths, bgmaps = render_viewpoints(
             render_poses=data_dict["poses"][data_dict["i_test"]],
             HW=data_dict["HW"][data_dict["i_test"]],
             Ks=data_dict["Ks"][data_dict["i_test"]],
             gt_imgs=[data_dict["images"][i].cpu().numpy() for i in data_dict["i_test"]],
-            savedir=testsavedir,
+            savedir=args.outpath,
             dump_images=args.dump_images,
             eval_ssim=args.eval_ssim,
             eval_lpips_alex=args.eval_lpips_alex,
             eval_lpips_vgg=args.eval_lpips_vgg,
             **render_viewpoints_kwargs,
         )
-        imageio.mimwrite(
-            os.path.join(testsavedir, "video.rgb.mp4"),
-            utils.to8b(rgbs),
-            fps=30,
-            quality=8,
-        )
-        imageio.mimwrite(
-            os.path.join(testsavedir, "video.depth.mp4"),
-            utils.to8b(1 - depths / np.max(depths)),
-            fps=30,
-            quality=8,
-        )
+       
 
     # render video
     if args.render_video:

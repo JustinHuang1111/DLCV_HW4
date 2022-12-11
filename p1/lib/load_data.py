@@ -1,7 +1,7 @@
 import numpy as np
 
 from .load_blendedmvs import load_blendedmvs_data
-from .load_blender import load_blender_data
+from .load_blender import load_blender_data, load_blender_test_data
 from .load_co3d import load_co3d_data
 from .load_deepvoxels import load_dv_data
 from .load_llff import load_llff_data
@@ -59,6 +59,21 @@ def load_data(args):
             print("original far", _far)
         print("NEAR FAR", near, far)
 
+    elif args.dataset_type == "blender_test":
+        images, poses, render_poses, hwf, i_split, filenames = load_blender_test_data(
+            args.datadir, args.half_res, args.testskip
+        )
+        print("Loaded blender", images.shape, render_poses.shape, hwf, args.datadir, f"{len(filenames)} files")
+        i_test = i_split
+
+        near, far = 2.0, 6.0
+
+        if images.shape[-1] == 4:
+            if args.white_bkgd:
+                images = images[..., :3] * images[..., -1:] + (1.0 - images[..., -1:])
+            else:
+                images = images[..., :3] * images[..., -1:]
+    
     elif args.dataset_type == "blender":
         images, poses, render_poses, hwf, i_split = load_blender_data(
             args.datadir, args.half_res, args.testskip
@@ -169,22 +184,38 @@ def load_data(args):
         Ks = K
 
     render_poses = render_poses[..., :4]
-
-    data_dict = dict(
+    
+    if args.dataset_type == "blender_test":
+        data_dict = dict(
         hwf=hwf,
         HW=HW,
         Ks=Ks,
         near=near,
         far=far,
         near_clip=near_clip,
-        i_train=i_train,
-        i_val=i_val,
+        i_test=i_test,
         poses=poses,
         render_poses=render_poses,
         images=images,
         depths=depths,
         irregular_shape=irregular_shape,
     )
+    else:
+        data_dict = dict(
+            hwf=hwf,
+            HW=HW,
+            Ks=Ks,
+            near=near,
+            far=far,
+            near_clip=near_clip,
+            i_train=i_train,
+            i_val=i_val,
+            poses=poses,
+            render_poses=render_poses,
+            images=images,
+            depths=depths,
+            irregular_shape=irregular_shape,
+        )
     return data_dict
 
 

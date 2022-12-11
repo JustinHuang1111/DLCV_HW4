@@ -103,15 +103,16 @@ def load_blender_data(basedir, half_res=False, testskip=1):
     return imgs, poses, render_poses, [H, W, focal], i_split
 
 
-def load_blender_test_data(testdir, half_res=False, testskip=1):
+def load_blender_test_data(json_dir, half_res=False, testskip=1):
     splits = ["test"]
     metas = {}
     for s in splits:
-        with open(testdir, "r") as fp:
+        with open(json_dir, "r") as fp:
             metas[s] = json.load(fp)
 
     all_imgs = []
     all_poses = []
+    filenames = []
     counts = [0]
     for s in splits:
         meta = metas[s]
@@ -123,8 +124,7 @@ def load_blender_test_data(testdir, half_res=False, testskip=1):
             skip = testskip
 
         for frame in meta["frames"][::skip]:
-            fname = os.path.join(frame["file_path"] + ".png")
-            imgs.append(imageio.imread(fname))
+            filenames.append(frame["file_path"].split("/")[-1])
             poses.append(np.array(frame["transform_matrix"]))
         imgs = (np.array(imgs) / 255.0).astype(np.float32)  # keep all 4 channels (RGBA)
         poses = np.array(poses).astype(np.float32)
@@ -160,4 +160,4 @@ def load_blender_test_data(testdir, half_res=False, testskip=1):
         imgs = imgs_half_res
         # imgs = tf.image.resize_area(imgs, [400, 400]).numpy()
 
-    return imgs, poses, render_poses, [H, W, focal], i_split
+    return imgs, poses, render_poses, [H, W, focal], i_split, filenames
