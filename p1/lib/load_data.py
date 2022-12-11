@@ -168,8 +168,9 @@ def load_data(args, json_dir = None):
     H, W, focal = hwf
     H, W = int(H), int(W)
     hwf = [H, W, focal]
-    HW = np.array([im.shape[:2] for im in images])
-    irregular_shape = images.dtype is np.dtype("object")
+    if args.dataset_type != "blender_test":
+        HW = np.array([im.shape[:2] for im in images])
+        irregular_shape = images.dtype is np.dtype("object")
 
     if K is None:
         K = np.array([[focal, 0, 0.5 * W], [0, focal, 0.5 * H], [0, 0, 1]])
