@@ -995,6 +995,7 @@ if __name__ == "__main__":
             eval_ssim=args.eval_ssim,
             eval_lpips_alex=args.eval_lpips_alex,
             eval_lpips_vgg=args.eval_lpips_vgg,
+            filenames=data_dict["filenames"][data_dict["i_test"]],
             **render_viewpoints_kwargs,
         )
        
