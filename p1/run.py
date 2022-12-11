@@ -203,7 +203,7 @@ def render_viewpoints(
         for i in trange(len(rgbs)):
             rgb8 = utils.to8b(rgbs[i])
             if filenames != None:
-                filename = os.path.join(savedir, filenames[i])
+                filename = os.path.join(savedir, filenames[i]+".png")
             else:
                 filename = os.path.join(savedir, "images", f"r_{i}.png")
 
