@@ -171,6 +171,8 @@ def load_data(args, json_dir = None):
     if args.dataset_type != "blender_test":
         HW = np.array([im.shape[:2] for im in images])
         irregular_shape = images.dtype is np.dtype("object")
+    else:
+        HW = np.array([[800, 800] for _ in poses])
 
     if K is None:
         K = np.array([[focal, 0, 0.5 * W], [0, focal, 0.5 * H], [0, 0, 1]])
@@ -194,7 +196,6 @@ def load_data(args, json_dir = None):
         poses=poses,
         render_poses=render_poses,
         depths=depths,
-        irregular_shape=irregular_shape,
     )
     else:
         data_dict = dict(
