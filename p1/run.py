@@ -240,6 +240,7 @@ def load_everything(args, cfg):
         "i_train",
         "i_val",
         "i_test",
+        "filenames",
         "irregular_shape",
         "poses",
         "render_poses",
