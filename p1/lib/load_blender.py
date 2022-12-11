@@ -132,7 +132,7 @@ def load_blender_test_data(json_dir, half_res=False, testskip=1):
         all_imgs.append(imgs)
         all_poses.append(poses)
 
-    i_split = [np.arange(counts[i], counts[i + 1]) for i in range(2)]
+    i_split = [np.arange(counts[i], counts[i + 1]) for i in range(1)]
 
     imgs = np.concatenate(all_imgs, 0)
     poses = np.concatenate(all_poses, 0)
