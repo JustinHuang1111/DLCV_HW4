@@ -10,7 +10,7 @@ from .load_nsvf import load_nsvf_data
 from .load_tankstemple import load_tankstemple_data
 
 
-def load_data(args):
+def load_data(args, json_dir = None):
 
     K, depths = None, None
     near_clip = None
@@ -61,7 +61,7 @@ def load_data(args):
 
     elif args.dataset_type == "blender_test":
         images, poses, render_poses, hwf, i_split, filenames = load_blender_test_data(
-            args.datadir, args.half_res, args.testskip
+            json_dir, args.half_res, args.testskip
         )
         print("Loaded blender", images.shape, render_poses.shape, hwf, args.datadir, f"{len(filenames)} files")
         i_test = i_split

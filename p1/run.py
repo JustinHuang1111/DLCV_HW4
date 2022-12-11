@@ -27,6 +27,7 @@ def config_parser():
         formatter_class=argparse.ArgumentDefaultsHelpFormatter
     )
     parser.add_argument("--config", required=True, help="config file path")
+    parser.add_argument("--json_dir", help="json file path")
     parser.add_argument("--seed", type=int, default=777, help="Random seed")
     parser.add_argument(
         "--no_reload", action="store_true", help="do not reload weights from saved ckpt"
@@ -225,7 +226,7 @@ def seed_everything():
 
 def load_everything(args, cfg):
     """Load images / poses / camera settings / data split."""
-    data_dict = load_data(cfg.data)
+    data_dict = load_data(cfg.data, json_dir = args.json_dir)
 
     # remove useless field
     kept_keys = {
