@@ -253,7 +253,8 @@ def load_everything(args, cfg):
             torch.FloatTensor(im, device="cpu") for im in data_dict["images"]
         ]
     else:
-        data_dict["images"] = torch.FloatTensor(data_dict["images"], device="cpu")
+        if "images" in data_dict.keys():
+            data_dict["images"] = torch.FloatTensor(data_dict["images"], device="cpu")
     data_dict["poses"] = torch.Tensor(data_dict["poses"])
     return data_dict
 
