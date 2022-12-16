@@ -105,7 +105,7 @@ def render_viewpoints(
     eval_ssim=False,
     eval_lpips_alex=False,
     eval_lpips_vgg=False,
-    filenames = None
+    filenames=None,
 ):
     """Render images for the given viewpoints; run evaluation if gt given."""
     assert len(render_poses) == len(HW) and len(HW) == len(Ks)
@@ -198,12 +198,12 @@ def render_viewpoints(
             depths[i] = np.rot90(depths[i], k=render_video_rot90, axes=(0, 1))
             bgmaps[i] = np.rot90(bgmaps[i], k=render_video_rot90, axes=(0, 1))
 
-    os.makedirs(os.path.join(savedir, "images"), exist_ok=True)
+    # os.makedirs(os.path.join(savedir, "images"), exist_ok=True)
     if savedir is not None and dump_images:
         for i in trange(len(rgbs)):
             rgb8 = utils.to8b(rgbs[i])
             if filenames != None:
-                filename = os.path.join(savedir, filenames[i]+".png")
+                filename = os.path.join(savedir, filenames[i] + ".png")
             else:
                 filename = os.path.join(savedir, "images", f"r_{i}.png")
 
@@ -227,7 +227,7 @@ def seed_everything():
 
 def load_everything(args, cfg):
     """Load images / poses / camera settings / data split."""
-    data_dict = load_data(cfg.data, json_dir = args.json_dir)
+    data_dict = load_data(cfg.data, json_dir=args.json_dir)
 
     # remove useless field
     kept_keys = {
@@ -1001,7 +1001,6 @@ if __name__ == "__main__":
             filenames=data_dict["filenames"],
             **render_viewpoints_kwargs,
         )
-       
 
     # render video
     if args.render_video:
