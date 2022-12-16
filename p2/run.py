@@ -55,7 +55,7 @@ np.random.seed(myseed)
 torch.manual_seed(myseed)
 if torch.cuda.is_available():
     torch.cuda.manual_seed_all(myseed)
-device = "cuda" if torch.cuda.is_available() else "cpu"
+device = "cuda:1" if torch.cuda.is_available() else "cpu"
 parser = config_parser()
 args = parser.parse_args()
 
@@ -124,6 +124,9 @@ for epoch in range(args.n_epochs):
 
     # Print the information.
     print(f"[ Train | {epoch + 1:03d}/{args.n_epochs:03d} ] loss = {train_loss:.5f}")
+    
+    if epoch % 100 == 0:
+        torch.save(resnet.state_dict(), f"./ckpt/{epoch}-net.pt")
 
     # ---------- Validation ----------
     # Make sure the model is in eval mode so that some modules like dropout are disabled and work normally.

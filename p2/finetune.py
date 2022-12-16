@@ -41,6 +41,16 @@ test_tfm = transforms.Compose(
 
 # However, it is also possible to use augmentation in the testing phase.
 # You may use train_tfm to produce a variety of images and then test using ensemble methods
+# train_tfm = transforms.Compose(
+#     [
+#         # Resize the image into a fixed shape (height = width = 128)
+#         transforms.Resize(128),
+#         transforms.CenterCrop(128),
+#         transforms.ToTensor(),
+#         transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225]),   
+#     ]
+# )
+
 train_tfm = transforms.Compose(
     [
         # Resize the image into a fixed shape (height = width = 128)
@@ -77,7 +87,7 @@ np.random.seed(myseed)
 torch.manual_seed(myseed)
 if torch.cuda.is_available():
     torch.cuda.manual_seed_all(myseed)
-device = "cuda" if torch.cuda.is_available() else "cpu"
+device = "cuda:1" if torch.cuda.is_available() else "cpu"
 parser = config_parser()
 args = parser.parse_args()
 
@@ -158,6 +168,9 @@ class fullModel(nn.Module):
             self.backbone = models.resnet50(pretrained=True)
             print("use pretrained model")
         print(self.backbone)
+        # self.fc = nn.Sequential(
+        #     nn.Dropout(p=0.4),nn.ReLU(), nn.Linear(1000, 500), nn.ReLU(), nn.Linear(500, 256), nn.ReLU(), nn.Linear(256, 65)
+        # )
         self.fc = nn.Sequential(
             nn.ReLU(), nn.Linear(1000, 250), nn.ReLU(), nn.Linear(250, 65)
         )
@@ -172,16 +185,17 @@ model = fullModel().to(device)
 
 
 # The number of training epochs and patience.
-patience = 30  # If no improvement in 'patience' epochs, early stop
+patience = 100  # If no improvement in 'patience' epochs, early stop
 
 # Initialize a model, and put it on the device specified.
 # model = models.vgg16_bn(pretrained=False).to(device)
 # For the classification task, we use cross-entropy as the measurement of performance.
-criterion = nn.CrossEntropyLoss()
+criterion = nn.CrossEntropyLoss(label_smoothing = 0.1)
 
 # Initialize optimizer, you may fine-tune some hyperparameters such as learning rate on your own.
-optimizer = torch.optim.Adam(model.parameters(), lr=0.01, weight_decay=1e-5)
-scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, "min")
+# optimizer = torch.optim.Adam(model.parameters(), lr=0.0001, weight_decay=1e-5)
+optimizer = torch.optim.SGD(model.parameters(), lr=0.01, momentum=0.9)
+scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, "max", verbose=True,factor=0.5)
 # Initialize trackers, these are not parameters and should not be changed
 stale = 0
 best_acc = 0
@@ -265,7 +279,7 @@ for epoch in range(args.n_epochs):
     #######################
     #      scheduler      #
     #######################
-    scheduler.step(valid_loss)
+    scheduler.step(valid_acc)
 
     #######################
     # Print the information.
@@ -280,7 +294,7 @@ for epoch in range(args.n_epochs):
                 f"[ Valid | {epoch + 1:03d}/{args.n_epochs:03d} ] loss = {valid_loss:.5f}, acc = {valid_acc:.5f} -> best"
             )
             f.write(
-                f"[ Valid {args.exp_name} | {epoch + 1:03d}/{args.n_epochs:03d} ] loss = {valid_loss:.5f}, acc = {valid_acc:.5f} -> best\n"
+                f"[ Train | {epoch + 1:03d}/{args.n_epochs:03d} ] loss = {train_loss:.5f}, acc = {train_acc:.5f}\n[ Valid {args.exp_name} | {epoch + 1:03d}/{args.n_epochs:03d} ] loss = {valid_loss:.5f}, acc = {valid_acc:.5f} -> best\n"
             )
     else:
         with open(f"./{args.exp_name}_log.txt", "a") as f:
@@ -288,7 +302,7 @@ for epoch in range(args.n_epochs):
                 f"[ Valid | {epoch + 1:03d}/{args.n_epochs:03d} ] loss = {valid_loss:.5f}, acc = {valid_acc:.5f}"
             )
             f.write(
-                f"[ Valid {args.exp_name} | {epoch + 1:03d}/{args.n_epochs:03d} ] loss = {valid_loss:.5f}, acc = {valid_acc:.5f}\n"
+                f"[ Train | {epoch + 1:03d}/{args.n_epochs:03d} ] loss = {train_loss:.5f}, acc = {train_acc:.5f}\n[ Valid {args.exp_name} | {epoch + 1:03d}/{args.n_epochs:03d} ] loss = {valid_loss:.5f}, acc = {valid_acc:.5f}\n"
             )
 
     # save models

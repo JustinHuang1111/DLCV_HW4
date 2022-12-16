@@ -1,0 +1,2 @@
+wget https://www.dropbox.com/s/mcofkcf53brg9jc/300_fourth_finetune.pt?dl=1 -O ./ckpt/300_fourth_finetune.pt
+wget https://www.dropbox.com/s/29hgwf4amc88y43/400minesgd_first_finetune.pt?dl=1 -O ./ckpt/400minesgd_first_finetune.pt
