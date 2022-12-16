@@ -1,7 +1,7 @@
 _base_ = "../default.py"
 
 expname = "dvgo_hotdog"
-basedir = "./p1/logs/nerf_synthetic"
+basedir = "./logs/nerf_synthetic"
 
 data = dict(
     # datadir="/content/hw4_data/hw4_data/hotdog",
