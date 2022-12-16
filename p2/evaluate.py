@@ -22,7 +22,9 @@ def config_parser():
     )
     parser.add_argument("--image_path", required=True, help="config file path")
     parser.add_argument("--csv_path", required=True, help="config file path")
-    parser.add_argument("--output_path", default="./out.csv",required=True, help="config file path")
+    parser.add_argument(
+        "--output_path", default="./out.csv", required=True, help="config file path"
+    )
     parser.add_argument("--model_path1", required=True, help="config file path")
     parser.add_argument("--model_path2", required=True, help="config file path")
     # parser.add_argument("--model_path3", required=True, help="config file path")
@@ -80,7 +82,7 @@ parser = config_parser()
 args = parser.parse_args()
 
 
-with open("./class.json", newline="") as jsonfile:
+with open("./p2/class.json", newline="") as jsonfile:
     classes = json.load(jsonfile)
 
 
@@ -90,13 +92,13 @@ class FinetuneDataset:
 
         sort_csv = pd.read_csv(csv)
         self.labels_list = sorted(sort_csv.label.values[:])
-        
+
         self.filenames = sorted(sort_csv.filename.values[:])
         self.images_list = [
-                os.path.join(imgpath, x)
-                for x in sorted(os.listdir(imgpath))
-                if x in self.filenames
-            ]
+            os.path.join(imgpath, x)
+            for x in sorted(os.listdir(imgpath))
+            if x in self.filenames
+        ]
         self.transform = tfm
 
     def __len__(self):
@@ -124,29 +126,35 @@ class fullModel(nn.Module):
     def __init__(self) -> None:
         super(fullModel, self).__init__()
         self.backbone = models.resnet50(pretrained=False)
-       
+
         self.fc = nn.Sequential(
             nn.ReLU(), nn.Linear(1000, 250), nn.ReLU(), nn.Linear(250, 65)
         )
-       
+
     def forward(self, x):
         out = self.backbone(x)
         out = self.fc(out)
         return out
 
+
 class EnsembledModel(nn.Module):
     def __init__(self, model1, model2) -> None:
         super(EnsembledModel, self).__init__()
         self.model1 = fullModel()
-        self.model1.load_state_dict(torch.load(model1, map_location="cpu")["model_state_dict"])
+        self.model1.load_state_dict(
+            torch.load(model1, map_location="cpu")["model_state_dict"]
+        )
         self.model2 = fullModel()
-        self.model2.load_state_dict(torch.load(model2, map_location="cpu")["model_state_dict"])
+        self.model2.load_state_dict(
+            torch.load(model2, map_location="cpu")["model_state_dict"]
+        )
         # self.model3 = fullModel()
         # self.model3.load_state_dict(torch.load(model2)["model_state_dict"])
 
     def forward(self, x):
-        out = self.model1(x) + self.model2(x)*0.5
+        out = self.model1(x) + self.model2(x) * 0.5
         return out
+
 
 model = EnsembledModel(args.model_path1, args.model_path2).to(device)
 
@@ -172,7 +180,7 @@ valid_accs = []
 
 template.set_index("filename", inplace=True)
 # Iterate the validation set by batches.
-for idx,(img, filename) in enumerate(valid_loader):
+for idx, (img, filename) in enumerate(valid_loader):
 
     # A batch consists of image data and corresponding labels.
     # imgs = imgs.half()
@@ -201,7 +209,7 @@ for idx,(img, filename) in enumerate(valid_loader):
 #######################
 # Print the information.
 # print(
-    # f"[ Valid | acc = {valid_acc:.5f}"
+# f"[ Valid | acc = {valid_acc:.5f}"
 # )
 
 template.to_csv(args.output_path)
