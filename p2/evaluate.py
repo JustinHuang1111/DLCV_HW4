@@ -152,7 +152,7 @@ class EnsembledModel(nn.Module):
         # self.model3.load_state_dict(torch.load(model2)["model_state_dict"])
 
     def forward(self, x):
-        out = self.model1(x) + self.model2(x) * 0.3
+        out = self.model1(x) + self.model2(x) * 0.4
         return out
 
 
