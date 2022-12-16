@@ -77,7 +77,7 @@ np.random.seed(myseed)
 torch.manual_seed(myseed)
 if torch.cuda.is_available():
     torch.cuda.manual_seed_all(myseed)
-device = "cuda:2" if torch.cuda.is_available() else "cpu"
+device = "cuda" if torch.cuda.is_available() else "cpu"
 parser = config_parser()
 args = parser.parse_args()
 
