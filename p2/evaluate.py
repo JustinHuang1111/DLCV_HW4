@@ -212,7 +212,7 @@ print(f"[ Valid | acc = {valid_acc:.5f}")
 template.reset_index(inplace=True)
 template = template[["id", "filename", "label"]]
 
-template.to_csv(args.output_path)
+template.to_csv(args.output_path, index=False)
 
 # import argparse
 # import json
