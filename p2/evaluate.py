@@ -89,24 +89,25 @@ with open("./p2/class.json", newline="") as jsonfile:
 class FinetuneDataset:
     def __init__(self, imgpath, csv, tfm=test_tfm):
         # self.files =
-        self.imgpath = imgpath
-        self.sort_csv = pd.read_csv(csv)
-        # self.labels_list = sorted(sort_csv.label.values[:])
 
-        self.filenames = sorted(self.sort_csv.filename.values[:])
+        sort_csv = pd.read_csv(csv)
+        self.labels_list = sorted(sort_csv.label.values[:])
+
+        self.filenames = sorted(sort_csv.filename.values[:])
+        self.images_list = [
+            os.path.join(imgpath, x)
+            for x in sorted(os.listdir(imgpath))
+            if x in self.filenames
+        ]
         self.transform = tfm
 
     def __len__(self):
-        return len(self.filenames)
+        return len(self.images_list)
 
     def __getitem__(self, idx):
-        filename = self.sort_csv.iloc[idx]["filename"]
-
+        im = self.transform(Image.open(self.images_list[idx]))
         # source train and valid / target valid -> image and label
-        # label = classes[stripped_label]
-        im = self.transform(Image.open(os.path.join(self.imgpath, filename)))
-        # source train and valid / target valid -> image and label
-        stripped_label = filename[:-9]
+        stripped_label = self.images_list[idx].split("/")[-1][:-9]
         label = classes[stripped_label]
 
         # target train -> only image
