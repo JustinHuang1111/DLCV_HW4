@@ -209,8 +209,9 @@ valid_acc = sum(valid_accs) / len(valid_accs)
 #######################
 # Print the information.
 print(f"[ Valid | acc = {valid_acc:.5f}")
-template.reset_index()
+template.reset_index(inplace=True)
 template = template[["id", "filename", "label"]]
+
 template.to_csv(args.output_path)
 
 # import argparse
