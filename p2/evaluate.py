@@ -209,6 +209,7 @@ valid_acc = sum(valid_accs) / len(valid_accs)
 #######################
 # Print the information.
 print(f"[ Valid | acc = {valid_acc:.5f}")
+template.set_index("id", inplace=True)
 
 template.to_csv(args.output_path)
 
