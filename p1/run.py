@@ -990,9 +990,9 @@ if __name__ == "__main__":
         os.makedirs(args.outpath, exist_ok=True)
         print("All results are dumped into", args.outpath)
         rgbs, depths, bgmaps = render_viewpoints(
-            render_poses=data_dict["poses"][data_dict["i_test"]],
-            HW=data_dict["HW"][data_dict["i_test"]],
-            Ks=data_dict["Ks"][data_dict["i_test"]],
+            render_poses=data_dict["poses"][tuple(data_dict["i_test"])],
+            HW=data_dict["HW"][tuple(data_dict["i_test"])],
+            Ks=data_dict["Ks"][tuple(data_dict["i_test"])],
             savedir=args.outpath,
             dump_images=args.dump_images,
             eval_ssim=args.eval_ssim,
